@@ -30,4 +30,4 @@ class ArticleResponse(BaseArticle):
         from_attributes=True, 
         extra='forbid',
         json_encoders={
-        datetime: lambda v: v.strftime("%d-%m-%Y %H:%M:%S")})
+        datetime: lambda v: v.isoformat()})

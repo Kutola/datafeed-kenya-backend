@@ -26,7 +26,7 @@ def create_article(article: article_schemas.CreateArticle, db: Session = Depends
 
 @router.get("/", response_model=List[article_schemas.ArticleResponse])
 def get_articles(db: Session = Depends(get_db)): 
-    articles = db.query(models.Article).all()
+    articles = db.query(models.Article).order_by(models.Article.published_at.desc()).all()
     return articles
 
 @router.get("/{id}", response_model=article_schemas.ArticleResponse)

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import models
@@ -11,9 +12,14 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 # Register endpoint
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(user: user_schemas.CreateUser, db: Session = Depends(get_db)):
-    # Check if user already exists
-    existing_user = db.query(models.User).filter(models.User.email == user.email).first()
+    # Normalize user to lowercase
+    user_dict = user.model_dump()
+    user_dict['name'] = user_dict['name'].lower().strip()
 
+    # Check if user already exists
+    existing_user = db.query(models.User).filter(
+        func.lower(models.User.name) == user_dict['name']
+    ).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -40,8 +46,13 @@ def register(user: user_schemas.CreateUser, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=user_schemas.Token)
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    # Convert input username to lowercase
+    username = user_credentials.username.lower().strip()
+    
     # check if the user exists
-    user = db.query(models.User).filter(models.User.email == user_credentials.username).first()
+    user = db.query(models.User).filter(
+        func.lower(models.User.name) == username
+    ).first()
 
     if not user:
         raise HTTPException(
