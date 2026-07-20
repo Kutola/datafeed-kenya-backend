@@ -1,10 +1,18 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import Base, engine
+from alembic.config import Config
+from alembic import command
 
-from .routers import article, users, auth
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    alembic_cfg = Config("alembic.ini")
+    command.upgrade(alembic_cfg, "head")
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 origins = ["*"]
 
@@ -16,10 +24,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from .api_routers import article, users, auth
 app.include_router(article.router)
 app.include_router(users.router)
 app.include_router(auth.router)
 
 @app.get("/")
 def root():
-    return {"message": "My forst CRUD app"}
+    return {"message": "DataFeed Kenya is live"}
