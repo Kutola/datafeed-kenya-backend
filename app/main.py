@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from .api_routers import article, users, auth
+from .routers import article, users, auth
 app.include_router(article.router)
 app.include_router(users.router)
 app.include_router(auth.router)
