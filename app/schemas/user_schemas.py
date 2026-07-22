@@ -22,7 +22,7 @@ class FetchUser(BaseModel):
     phone: str
 
 class UserLogin(BaseModel):
-    username: str
+    email: str
     password: str
 
 class Token(BaseModel):

@@ -8,10 +8,7 @@ from ..database import get_db
 from .users import get_user
 from ..dependencies import oauth2
 
-router = APIRouter(
-    prefix="/articles",
-    tags=['Articles']
-)
+router = APIRouter(prefix="/articles", tags=['Articles'])
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=article_schemas.ArticleResponse )
 def create_article(article: article_schemas.CreateArticle, db: Session = Depends(get_db), 
