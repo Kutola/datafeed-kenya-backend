@@ -51,7 +51,7 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session =
     
     # check if the user exists
     user = db.query(models.User).filter(
-        func.lower(models.User.name) == username
+        func.lower(models.User.email) == username
     ).first()
 
     if not user:
