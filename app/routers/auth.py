@@ -47,11 +47,10 @@ def register(user: user_schemas.CreateUser, db: Session = Depends(get_db)):
 @router.post("/login", response_model=user_schemas.Token)
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     # Convert input username to lowercase
-    username = user_credentials.username.lower().strip()
+    email = user_credentials.username.lower().strip()
     
     # check if the user exists
-    user = db.query(models.User).filter(func.lower(models.User.email) == func.lower(user_credentials.email)).first()
-
+    user = db.query(models.User).filter(func.lower(models.User.email) == email).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
