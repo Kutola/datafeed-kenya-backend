@@ -12,7 +12,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-origins = ["*"]
+origins = [
+    "https://datafeed-kenya-frontend.vercel.app",
+    "http://localhost:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
