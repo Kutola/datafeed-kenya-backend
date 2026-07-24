@@ -14,6 +14,7 @@ app = FastAPI(lifespan=lifespan)
 
 origins = [
     "https://datafeed-kenya-frontend.vercel.app",
+    "https://datafeed-kenya-frontend-96sy160qf-kutoladatafeedproject.vercel.app",
     "http://localhost:3000",
 ]
 
